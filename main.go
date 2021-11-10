@@ -7,7 +7,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/zp4rker/notifier-api/routes"
+	"github.com/zp4rker/notifier-api/routing"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	fmt.Println("Server started!")
 
 	fmt.Println("Setting up server...")
-	routes.Init()
+	routing.Init()
 	go handleQuit(l)
 
 	fmt.Println("Setup server!")
