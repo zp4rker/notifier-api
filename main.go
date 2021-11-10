@@ -1,8 +1,8 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,17 +11,26 @@ import (
 )
 
 func main() {
-	srv := &http.Server{Addr: ":8080"}
+	fmt.Println("Starting server...")
+	l, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		panic("unable to start server")
+	}
+	fmt.Println("Server started!")
+
+	fmt.Println("Setting up server...")
 	routes.Init()
-	fmt.Println("Started server!")
-	go handleQuit(srv)
-	srv.ListenAndServe()
+	go handleQuit(l)
+
+	fmt.Println("Setup server!")
+	http.Serve(l, nil)
 }
 
-func handleQuit(srv *http.Server) {
+func handleQuit(l net.Listener) {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt)
 	<-sigChan
 	fmt.Println("\nStopping server...")
-	srv.Shutdown(context.TODO())
+	l.Close()
+	fmt.Println("Server stopped!")
 }
