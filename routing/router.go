@@ -10,4 +10,6 @@ func Init() {
 	http.HandleFunc("/", routes.NotFoundRoute)
 	http.HandleFunc("/hello-world", routes.HelloWorldRoute)
 	http.HandleFunc("/json-test", routes.JsonTestRoute)
+
+	http.HandleFunc("/email", routes.EmailRoute)
 }
