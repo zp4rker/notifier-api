@@ -20,15 +20,21 @@ func JsonTestRoute(rw http.ResponseWriter, req *http.Request) {
 
 	inputMap := make(map[string]interface{})
 	if err := json.Unmarshal(body, &inputMap); err != nil {
-		data, _ := json.Marshal(map[string]string{
+		data, _ := json.Marshal(map[string]interface{}{
 			"error": "Error parsing request body",
+			"request": map[string]string{
+				"body": string(body),
+			},
 		})
 		rw.Write(data)
 		return
 	}
 
-	output, _ := json.Marshal(map[string]string{
+	output, _ := json.Marshal(map[string]interface{}{
 		"message": "Successfully received JSON!",
+		"request": map[string]string{
+			"body": string(body),
+		},
 	})
 	rw.Write(output)
 }
