@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -21,9 +22,16 @@ func main() {
 	fmt.Println("Setting up server...")
 	routing.Init()
 	go handleQuit(l)
-
 	fmt.Println("Setup server!")
-	http.Serve(l, nil)
+
+	if err := http.Serve(l, nil); err != nil {
+		switch {
+		case errors.Is(err, http.ErrServerClosed), errors.Is(err, net.ErrClosed):
+			fmt.Println("Server stopped!")
+		default:
+			panic(err)
+		}
+	}
 }
 
 func handleQuit(l net.Listener) {
